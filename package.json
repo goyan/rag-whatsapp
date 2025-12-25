@@ -10,6 +10,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "serve": "tsx scripts/cli.ts serve",
     "test": "vitest",
     "test:run": "vitest run",
     "lint": "eslint src --ext .ts",
@@ -20,13 +21,13 @@
     "docker:down": "docker compose -f docker/docker-compose.yml down",
     "docker:logs": "docker compose -f docker/docker-compose.yml logs -f",
     "ollama:pull": "docker exec rag-ollama ollama pull mistral && docker exec rag-ollama ollama pull nomic-embed-text",
-    "ingest": "tsx scripts/ingest.ts",
-    "query": "tsx scripts/query.ts",
-    "agent:list": "tsx scripts/agent.ts list",
-    "agent:start": "tsx scripts/agent.ts start",
-    "agent:stop": "tsx scripts/agent.ts stop",
-    "agents:status": "tsx scripts/agent.ts status",
-    "agents:parallel": "tsx scripts/agent.ts parallel"
+    "cli": "tsx scripts/cli.ts",
+    "ingest": "tsx scripts/cli.ts ingest",
+    "query": "tsx scripts/cli.ts query",
+    "web:dev": "cd web && npm run dev",
+    "web:build": "cd web && npm run build",
+    "web:start": "cd web && npm run start",
+    "dev:all": "concurrently \"pnpm dev\" \"pnpm web:dev\""
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
