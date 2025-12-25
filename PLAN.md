@@ -499,7 +499,7 @@ interface QueryResponse {
 | Metadata DB | SQLite (dev) / PostgreSQL (prod) | Simple, no setup |
 | LLM | Ollama / OpenAI / Claude | Flexibility |
 | Embeddings | Ollama / OpenAI | Cost vs quality choice |
-| Web UI | Next.js 14 | React, SSR, API routes |
+| Web UI | Next.js 16 | React 19, SSR, Turbopack |
 | Testing | Vitest | Fast, ESM native |
 
 ---
