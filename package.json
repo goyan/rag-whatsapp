@@ -1,0 +1,75 @@
+{
+  "name": "rag-whatsapp",
+  "version": "0.1.0",
+  "description": "Smart RAG system to query WhatsApp chat history",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "docker:up": "docker compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f docker/docker-compose.yml down",
+    "docker:logs": "docker compose -f docker/docker-compose.yml logs -f",
+    "ollama:pull": "docker exec rag-ollama ollama pull mistral && docker exec rag-ollama ollama pull nomic-embed-text",
+    "ingest": "tsx scripts/ingest.ts",
+    "query": "tsx scripts/query.ts",
+    "agent:list": "tsx scripts/agent.ts list",
+    "agent:start": "tsx scripts/agent.ts start",
+    "agent:stop": "tsx scripts/agent.ts stop",
+    "agents:status": "tsx scripts/agent.ts status",
+    "agents:parallel": "tsx scripts/agent.ts parallel"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@qdrant/js-client-rest": "^1.12.0",
+    "bullmq": "^5.34.0",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.2.0",
+    "@fastify/cors": "^10.0.2",
+    "@fastify/multipart": "^9.0.3",
+    "@fastify/websocket": "^11.0.2",
+    "ioredis": "^5.4.2",
+    "ollama": "^0.5.11",
+    "openai": "^4.77.0",
+    "zod": "^3.24.1",
+    "better-sqlite3": "^11.7.0",
+    "nanoid": "^5.0.9",
+    "ora": "^8.1.1",
+    "chalk": "^5.4.1",
+    "commander": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "keywords": [
+    "rag",
+    "whatsapp",
+    "ai",
+    "llm",
+    "vector-search"
+  ],
+  "author": "goyan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goyan/rag-whatsapp"
+  }
+}
