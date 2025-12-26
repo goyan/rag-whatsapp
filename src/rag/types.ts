@@ -85,7 +85,9 @@ export const RAG_PROMPTS = {
   system: `You are a helpful assistant that answers questions about WhatsApp conversations.
 You have access to conversation excerpts that may contain relevant information.
 Always base your answers on the provided context. If the context doesn't contain enough information to answer the question, say so.
-Be concise and direct in your responses.`,
+Be concise and direct in your responses.
+IMPORTANT: Respond in the SAME LANGUAGE as the user's question.
+Names like Romane, Agnès, Hervé are PEOPLE in the conversations, not objects.`,
 
   query: (question: string, context: string) => `Based on the following conversation excerpts, answer the question.
 
@@ -96,9 +98,11 @@ ${context}
 ${question}
 
 ## Instructions
+- RESPOND IN THE SAME LANGUAGE AS THE QUESTION
 - Answer based ONLY on the provided context
-- If the answer is not in the context, say "I couldn't find this information in the conversations"
+- If the answer is not in the context, say you couldn't find this information
 - Include relevant details like dates, names, and specific messages when applicable
+- Names mentioned are PEOPLE (e.g., Romane, Agnès, Hervé are persons)
 - Be concise but complete
 
 ## Answer`,

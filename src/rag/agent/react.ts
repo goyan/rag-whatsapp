@@ -32,13 +32,50 @@ Observation: the result of the action
 Thought: I now know the final answer
 Final Answer: the final answer to the original input question
 
+CRITICAL RULES FOR SEARCH:
+- NEVER translate the user's query - keep it in the ORIGINAL LANGUAGE
+- Names like "Romane", "Agnès", "Hervé" are PEOPLE'S NAMES, not objects or food
+- This is personal WhatsApp chat history - search for names, topics, and keywords AS-IS
+- If the question is in French, search in French
+- Preserve accents and special characters in searches
+
+IMPORTANT for Final Answer:
+- Reply in the SAME LANGUAGE as the user's question
+- Synthesize a clear, direct answer to the user's question
+- Extract and highlight the KEY information from the conversations
+- Include specific dates, names, and quotes when relevant
+- Do NOT just list raw search results - interpret and summarize them
+- If asking about advice/recommendations, state what advice was given
+
 Begin!
 
 Question: {question}
 Thought:`;
 
+const SYNTHESIS_PROMPT = `Based on the following conversation search results, provide a clear and helpful answer to the user's question.
+
+## Question
+{question}
+
+## Search Results
+{observations}
+
+## Instructions
+- RESPOND IN THE SAME LANGUAGE AS THE QUESTION (if French, reply in French)
+- Synthesize the information into a clear, direct answer
+- Extract the KEY points that answer the question
+- Include specific details: dates, names, exact quotes when relevant
+- If the question asks about advice/recommendations, clearly state what was said
+- Write naturally, as if explaining to a friend
+- If information is incomplete or unclear, acknowledge that
+- Do NOT just repeat the raw messages - interpret and summarize them
+- Names in the conversations (Romane, Agnès, Hervé, etc.) are PEOPLE
+
+## Answer`;
+
 export class ReActAgent {
   private steps: AgentStep[] = [];
+  private currentQuestion: string = '';
 
   /**
    * Run the agent on a question
@@ -49,6 +86,7 @@ export class ReActAgent {
   ): Promise<QueryResponse> {
     const startTime = Date.now();
     this.steps = [];
+    this.currentQuestion = question;
 
     const llm = getLLMProvider();
     let prompt = REACT_PROMPT.replace('{question}', question);
@@ -102,25 +140,104 @@ export class ReActAgent {
       }
     }
 
-    // If no final answer after max iterations, summarize what we found
+    // If no final answer after max iterations, use LLM to synthesize
     if (!finalAnswer) {
-      finalAnswer = this.summarizeSteps();
+      finalAnswer = await this.synthesizeAnswer(llm);
     }
 
     return {
       answer: finalAnswer,
       sources: [],
-      reasoning: this.steps.map((s) => {
-        let step = `Thought: ${s.thought}`;
-        if (s.action) step += `\nAction: ${s.action}(${JSON.stringify(s.actionInput)})`;
-        if (s.observation) step += `\nObservation: ${s.observation.slice(0, 200)}...`;
-        return step;
-      }),
+      reasoning: this.formatReasoningSteps(),
       metadata: {
         queryTime: Date.now() - startTime,
         chunksRetrieved: this.steps.length,
       },
     };
+  }
+
+  /**
+   * Format reasoning steps in a human-readable way
+   */
+  private formatReasoningSteps(): string[] {
+    return this.steps.map((s) => {
+      let formatted = s.thought || '';
+
+      // Make action descriptions human-readable
+      if (s.action) {
+        const actionDesc = this.describeAction(s.action, s.actionInput);
+        formatted = actionDesc;
+      }
+
+      return formatted;
+    }).filter(s => s.length > 0);
+  }
+
+  /**
+   * Convert raw action to human-readable description
+   */
+  private describeAction(action: string, input?: Record<string, unknown>): string {
+    switch (action.toLowerCase()) {
+      case 'search':
+        return `Searched for "${input?.query || 'conversations'}"${input?.participant ? ` involving ${input.participant}` : ''}`;
+      case 'filter_by_date':
+        return `Filtered results by date range${input?.startDate ? ` from ${input.startDate}` : ''}${input?.endDate ? ` to ${input.endDate}` : ''}`;
+      case 'summarize':
+        return `Summarized findings about "${input?.topic || 'the topic'}"`;
+      case 'get_participants':
+        return 'Retrieved list of conversation participants';
+      default:
+        return `Performed ${action}`;
+    }
+  }
+
+  /**
+   * Use LLM to synthesize a proper answer from observations
+   */
+  private async synthesizeAnswer(llm: ReturnType<typeof getLLMProvider>): Promise<string> {
+    const observations = this.steps
+      .filter((s) => s.observation && !s.observation.startsWith('Error'))
+      .map((s) => s.observation)
+      .join('\n\n---\n\n');
+
+    if (!observations) {
+      return "I searched through the conversations but couldn't find relevant information for your question.";
+    }
+
+    const prompt = SYNTHESIS_PROMPT
+      .replace('{question}', this.currentQuestion)
+      .replace('{observations}', observations);
+
+    try {
+      const answer = await llm.generate(prompt, {
+        maxTokens: 500,
+        temperature: 0.5,
+      });
+      return answer.trim();
+    } catch {
+      // Fallback to basic summary if LLM fails
+      return this.fallbackSummary();
+    }
+  }
+
+  /**
+   * Fallback summary without LLM
+   */
+  private fallbackSummary(): string {
+    if (this.steps.length === 0) {
+      return "I wasn't able to find relevant information for your question.";
+    }
+
+    const observations = this.steps
+      .filter((s) => s.observation && !s.observation.startsWith('Error'))
+      .map((s) => s.observation)
+      .join('\n\n');
+
+    if (!observations) {
+      return "I searched but couldn't find relevant information in the conversations.";
+    }
+
+    return `Based on my search, here's what I found:\n\n${observations}`;
   }
 
   private parseResponse(response: string): {
@@ -170,23 +287,6 @@ export class ReActAgent {
     }
 
     return result;
-  }
-
-  private summarizeSteps(): string {
-    if (this.steps.length === 0) {
-      return "I wasn't able to find relevant information for your question.";
-    }
-
-    const observations = this.steps
-      .filter((s) => s.observation && !s.observation.startsWith('Error'))
-      .map((s) => s.observation)
-      .join('\n\n');
-
-    if (!observations) {
-      return "I searched but couldn't find relevant information in the conversations.";
-    }
-
-    return `Based on my search, here's what I found:\n\n${observations}`;
   }
 }
 
