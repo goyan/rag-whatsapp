@@ -87,17 +87,17 @@ export function ChatMessage({ message }: ChatMessageProps) {
           <div className="mt-3 text-left">
             <button
               onClick={() => setShowSources(!showSources)}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--greenhouse-600)] hover:text-[var(--greenhouse-700)] transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--greenhouse-400)] hover:text-[var(--greenhouse-300)] transition-colors"
             >
               <span>Reasoning steps ({message.reasoning.length})</span>
               {showSources ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </button>
             {showSources && (
-              <div className="mt-2 p-3 rounded-xl bg-[var(--greenhouse-50)] border border-[var(--greenhouse-100)]">
-                <ol className="space-y-2 text-xs text-[var(--greenhouse-700)]">
+              <div className="mt-2 p-3 rounded-xl bg-[var(--earth-500)] border border-[var(--earth-400)]">
+                <ol className="space-y-2 text-xs text-[var(--foreground)]">
                   {message.reasoning.map((step, i) => (
                     <li key={i} className="flex gap-2">
-                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--greenhouse-200)] text-[var(--greenhouse-700)] flex items-center justify-center font-medium text-[10px]">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--greenhouse-600)] text-white flex items-center justify-center font-medium text-[10px]">
                         {i + 1}
                       </span>
                       <span className="leading-relaxed">{step}</span>
@@ -129,7 +129,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
                   <span className="truncate max-w-[100px]">
                     {source.participants.slice(0, 2).join(', ')}
                   </span>
-                  <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[var(--greenhouse-100)] text-[var(--greenhouse-700)] text-[10px] font-medium">
+                  <span className="ml-1 px-1.5 py-0.5 rounded-full bg-[var(--greenhouse-600)] text-white text-[10px] font-medium">
                     {(source.score * 100).toFixed(0)}%
                   </span>
                 </div>
