@@ -2,27 +2,144 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   RAG WhatsApp - "Nostalgic Digital Greenhouse" Design System
+   A warm, organic aesthetic that feels personal and intimate
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 :root {
-  --foreground: #171717;
-  --background: #ffffff;
+  /* Botanical Color Palette - Deep Forest */
+  --greenhouse-50: #3d4a3d;
+  --greenhouse-100: #4a5c4a;
+  --greenhouse-200: #5a6e5a;
+  --greenhouse-300: #6b826b;
+  --greenhouse-400: #7a9a6a;
+  --greenhouse-500: #5a9a47;
+  --greenhouse-600: #467a38;
+  --greenhouse-700: #385f2d;
+  --greenhouse-800: #2d4a25;
+  --greenhouse-900: #1a2d16;
+
+  /* Dark Neutral Earth Tones */
+  --earth-50: #4a4744;
+  --earth-100: #424040;
+  --earth-200: #3a3838;
+  --earth-300: #333131;
+  --earth-400: #2c2a2a;
+  --earth-500: #252323;
+  --earth-600: #1e1c1c;
+  --earth-700: #181717;
+  --earth-800: #121111;
+  --earth-900: #0a0909;
+
+  /* Accent Colors */
+  --moss: #4a7c59;
+  --fern: #3d6b4f;
+  --terracotta: #b86e4a;
+  --clay: #8a5438;
+  --cream: #3a3838;
+  --parchment: #2e2c2c;
+  --ink: #e8e6e3;
+  --graphite: #9a9590;
+
+  /* Semantic Colors */
+  --foreground: var(--ink);
+  --background: var(--earth-600);
+  --surface: var(--earth-400);
+  --muted: var(--graphite);
+  --border: var(--earth-300);
+  --accent: var(--greenhouse-400);
+  --accent-hover: var(--greenhouse-500);
+
+  /* Typography Scale */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Spacing & Sizing */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-full: 9999px;
+
+  /* Shadows with warmth */
+  --shadow-sm: 0 1px 2px rgba(42, 37, 32, 0.04), 0 1px 3px rgba(42, 37, 32, 0.06);
+  --shadow-md: 0 4px 6px rgba(42, 37, 32, 0.04), 0 2px 4px rgba(42, 37, 32, 0.06);
+  --shadow-lg: 0 10px 15px rgba(42, 37, 32, 0.06), 0 4px 6px rgba(42, 37, 32, 0.04);
+  --shadow-botanical: 0 4px 20px rgba(90, 154, 71, 0.12);
+
+  /* Transitions */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
 }
 
+/* Dark theme is now default - this override handles system preference for even darker */
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground: #ededed;
-    --background: #0a0a0a;
+    --background: var(--earth-700);
+    --surface: var(--earth-500);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* ═══════════════════════════════════════════════════════════════════════════
+   Base Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+html {
+  scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+body {
+  font-family: var(--font-body);
+  color: var(--foreground);
+  background: var(--background);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  z-index: 9999;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Typography
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Scrollbar - Organic styling
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -30,19 +147,50 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
+  background: var(--greenhouse-300);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background var(--duration-fast) var(--ease-smooth);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #666;
+  background: var(--greenhouse-400);
+  background-clip: content-box;
 }
 
-/* Message animations */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--greenhouse-300) transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Selection
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: var(--greenhouse-200);
+  color: var(--greenhouse-900);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Focus States - Botanical ring
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--greenhouse-400);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Animations
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -50,6 +198,346 @@ body {
   }
 }
 
-.message-enter {
-  animation: fadeIn 0.3s ease-out;
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animation utilities */
+.animate-fadeIn {
+  animation: fadeIn var(--duration-normal) var(--ease-smooth) forwards;
+}
+
+.animate-fadeInScale {
+  animation: fadeInScale var(--duration-normal) var(--ease-spring) forwards;
+}
+
+.animate-slideInRight {
+  animation: slideInRight var(--duration-normal) var(--ease-smooth) forwards;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft var(--duration-normal) var(--ease-smooth) forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s var(--ease-smooth) infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--earth-100) 0%,
+    var(--greenhouse-100) 50%,
+    var(--earth-100) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Staggered animation delays */
+.delay-75 { animation-delay: 75ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Message entrance animations */
+.message-enter-user {
+  animation: slideInLeft var(--duration-normal) var(--ease-spring) forwards;
+}
+
+.message-enter-assistant {
+  animation: slideInRight var(--duration-normal) var(--ease-spring) forwards;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Component Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Glassmorphism card */
+.glass-card {
+  background: rgba(44, 42, 42, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Paper card - dark surface */
+.paper-card {
+  background: var(--earth-400);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.paper-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Botanical button */
+.btn-botanical {
+  background: linear-gradient(135deg, var(--greenhouse-500) 0%, var(--greenhouse-600) 100%);
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-botanical);
+  transition: all var(--duration-fast) var(--ease-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-botanical::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.15) 100%);
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+}
+
+.btn-botanical:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(90, 154, 71, 0.25);
+}
+
+.btn-botanical:hover::before {
+  opacity: 1;
+}
+
+.btn-botanical:active {
+  transform: translateY(0);
+}
+
+/* Input field with organic styling */
+.input-organic {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1rem;
+  transition: all var(--duration-fast) var(--ease-smooth);
+  color: var(--foreground);
+}
+
+.input-organic::placeholder {
+  color: var(--muted);
+}
+
+.input-organic:focus {
+  border-color: var(--greenhouse-400);
+  box-shadow: 0 0 0 4px rgba(127, 176, 105, 0.1);
+}
+
+/* Chat bubble styles */
+.bubble-user {
+  background: linear-gradient(135deg, var(--greenhouse-500) 0%, var(--greenhouse-600) 100%);
+  color: white;
+  border-radius: var(--radius-xl) var(--radius-xl) var(--radius-sm) var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.bubble-assistant {
+  background: var(--earth-400);
+  color: var(--foreground);
+  border-radius: var(--radius-xl) var(--radius-xl) var(--radius-xl) var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+
+/* Decorative leaf pattern */
+.leaf-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 C20 15, 10 20, 10 35 C10 45, 20 55, 30 55 C40 55, 50 45, 50 35 C50 20, 40 15, 30 5' fill='none' stroke='%237fb069' stroke-width='0.5' opacity='0.15'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+}
+
+/* Status indicator */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.status-dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.3;
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.status-dot.online {
+  background: var(--greenhouse-400);
+}
+
+.status-dot.offline {
+  background: var(--terracotta);
+}
+
+/* Typing indicator */
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--greenhouse-400);
+  animation: float 1.4s ease-in-out infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Source tag */
+.source-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: var(--earth-300);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--greenhouse-300);
+  transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.source-tag:hover {
+  background: rgba(122, 154, 106, 0.2);
+  color: var(--greenhouse-400);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Utility Classes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--greenhouse-600) 0%, var(--moss) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--greenhouse-400), var(--moss));
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
 }
